@@ -29,5 +29,6 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         PRODUCT_BUNDLE_IDENTIFIER: com.personal.nightclock
         PRODUCT_NAME: NightClock
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Manual
         ENABLE_BITCODE: NO
