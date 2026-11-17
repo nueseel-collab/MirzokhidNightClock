@@ -140,4 +140,11 @@ let url = URL(fileURLWithPath: outputPath)
 try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
 
 guard let dest = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else {
-    fatalError("Failed to create PNG destinatio
+    fatalError("Failed to create PNG destination")
+}
+CGImageDestinationAddImage(dest, finalImage, nil)
+guard CGImageDestinationFinalize(dest) else {
+    fatalError("Failed to write AppIcon.png")
+}
+
+print("Generated 1024x1024 icon at \(outputPath)")
