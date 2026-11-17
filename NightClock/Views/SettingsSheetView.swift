@@ -18,7 +18,7 @@ struct SettingsSheetView: View {
                 .padding(20)
             }
             .background(Color(red: 0.07, green: 0.07, blue: 0.09).ignoresSafeArea())
-            .navigationTitle("Night Clock Settings")
+            .navigationTitle("Nightclock Turdubaev")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
