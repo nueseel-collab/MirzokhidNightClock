@@ -4,10 +4,19 @@ struct SettingsSheetView: View {
     @EnvironmentObject private var settings: ClockSettings
     @Environment(\.dismiss) private var dismiss
 
+    private var lang: AppLanguage {
+        settings.selectedLanguage
+    }
+
+    private var isRu: Bool {
+        lang == .russian
+    }
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    languageCard
                     brightnessCard
                     timeDisplayCard
                     clockFontCard
@@ -22,7 +31,7 @@ struct SettingsSheetView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                    Button(isRu ? "Готово" : "Done") {
                         dismiss()
                     }
                     .font(.headline)
@@ -35,13 +44,46 @@ struct SettingsSheetView: View {
 
     // MARK: - Cards
 
+    private var languageCard: some View {
+        SettingsCard(title: "Language / Язык") {
+            HStack(spacing: 12) {
+                ForEach(AppLanguage.allCases) { option in
+                    let isSelected = settings.selectedLanguage == option
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            settings.selectedLanguage = option
+                        }
+                    } label: {
+                        HStack {
+                            Text(option.displayName)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Spacer()
+                            if isSelected {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(isSelected ? Color.blue.opacity(0.24) : Color.white.opacity(0.06))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
     private var brightnessCard: some View {
-        SettingsCard(title: "Bedroom Brightness & Protection") {
+        SettingsCard(title: isRu ? "Яркость и защита экрана" : "Bedroom Brightness & Protection") {
             Toggle(isOn: $settings.veryDimMode) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Very Dim Mode")
+                    Text(isRu ? "Очень тусклый режим" : "Very Dim Mode")
                         .font(.headline)
-                    Text("Ultra-low-light mode for a pitch-black bedroom")
+                    Text(isRu ? "Максимально мягкий свет для тёмной спальни" : "Ultra-low-light mode for a pitch-black bedroom")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -52,7 +94,7 @@ struct SettingsSheetView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Clock Brightness")
+                    Text(isRu ? "Яркость часов" : "Clock Brightness")
                     Spacer()
                     Text("\(Int(settings.clockBrightness * 100))%")
                         .foregroundColor(.secondary)
@@ -64,7 +106,7 @@ struct SettingsSheetView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Background Brightness")
+                    Text(isRu ? "Яркость фона" : "Background Brightness")
                     Spacer()
                     Text("\(Int(settings.backgroundBrightness * 100))%")
                         .foregroundColor(.secondary)
@@ -76,7 +118,7 @@ struct SettingsSheetView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Clock Size")
+                    Text(isRu ? "Размер часов" : "Clock Size")
                     Spacer()
                     Text("\(Int(settings.clockScale * 100))%")
                         .foregroundColor(.secondary)
@@ -90,9 +132,9 @@ struct SettingsSheetView: View {
 
             Toggle(isOn: $settings.pixelShiftEnabled) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Gentle Pixel Shift")
+                    Text(isRu ? "Плавный сдвиг пикселей" : "Gentle Pixel Shift")
                         .font(.subheadline.weight(.medium))
-                    Text("Subtly drifts the clock to reduce overnight image retention")
+                    Text(isRu ? "Незаметно смещает часы, защищая экран от выгорания" : "Subtly drifts the clock to reduce overnight image retention")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -102,20 +144,20 @@ struct SettingsSheetView: View {
     }
 
     private var timeDisplayCard: some View {
-        SettingsCard(title: "Time Format") {
-            Toggle("24-Hour Time", isOn: $settings.use24HourTime)
+        SettingsCard(title: isRu ? "Формат времени" : "Time Format") {
+            Toggle(isRu ? "24-часовой формат" : "24-Hour Time", isOn: $settings.use24HourTime)
                 .tint(.blue)
             Divider().opacity(0.3)
-            Toggle("Show Seconds", isOn: $settings.showSeconds)
+            Toggle(isRu ? "Показывать секунды" : "Show Seconds", isOn: $settings.showSeconds)
                 .tint(.blue)
             Divider().opacity(0.3)
-            Toggle("Show Day & Date", isOn: $settings.showDate)
+            Toggle(isRu ? "Показывать день и дату" : "Show Day & Date", isOn: $settings.showDate)
                 .tint(.blue)
         }
     }
 
     private var clockFontCard: some View {
-        SettingsCard(title: "Clock Font") {
+        SettingsCard(title: isRu ? "Шрифт часов" : "Clock Font") {
             VStack(spacing: 10) {
                 ForEach(ClockFontOption.allCases) { option in
                     let isSelected = settings.selectedFont == option
@@ -130,10 +172,10 @@ struct SettingsSheetView: View {
                                 .foregroundColor(.white)
 
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(option.displayName)
+                                Text(option.displayName(for: lang))
                                     .font(.headline)
                                     .foregroundColor(.white)
-                                Text(option.subtitle)
+                                Text(option.subtitle(for: lang))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -159,8 +201,8 @@ struct SettingsSheetView: View {
     }
 
     private var clockColorCard: some View {
-        SettingsCard(title: "Clock Color") {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 10)], spacing: 10) {
+        SettingsCard(title: isRu ? "Цвет часов" : "Clock Color") {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 10)], spacing: 10) {
                 ForEach(ClockColorOption.allCases) { option in
                     let isSelected = settings.selectedClockColor == option
                     Button {
@@ -170,7 +212,7 @@ struct SettingsSheetView: View {
                             Circle()
                                 .fill(option.color)
                                 .frame(width: 18, height: 18)
-                            Text(option.displayName)
+                            Text(option.displayName(for: lang))
                                 .font(.subheadline.weight(.medium))
                                 .foregroundColor(.white)
                             Spacer()
@@ -194,11 +236,11 @@ struct SettingsSheetView: View {
     }
 
     private var backgroundsCard: some View {
-        SettingsCard(title: "Animated Backgrounds (30)") {
+        SettingsCard(title: isRu ? "Анимация фона (30)" : "Animated Backgrounds (30)") {
             VStack(alignment: .leading, spacing: 18) {
                 ForEach(BackgroundCategory.allCases) { category in
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(category.displayName)
+                        Text(category.displayName(for: lang))
                             .font(.subheadline.weight(.semibold))
                             .foregroundColor(.secondary)
                             .padding(.top, 4)
@@ -227,11 +269,11 @@ struct SettingsSheetView: View {
                                             )
 
                                         VStack(alignment: .leading, spacing: 2) {
-                                            Text(theme.displayName)
+                                            Text(theme.displayName(for: lang))
                                                 .font(.subheadline.weight(.semibold))
                                                 .foregroundColor(.white)
                                                 .lineLimit(1)
-                                            Text(theme.subtitle)
+                                            Text(theme.subtitle(for: lang))
                                                 .font(.caption2)
                                                 .foregroundColor(.secondary)
                                                 .lineLimit(2)
@@ -260,11 +302,17 @@ struct SettingsSheetView: View {
     }
 
     private var overnightTipsCard: some View {
-        SettingsCard(title: "Overnight iPad Tips") {
+        SettingsCard(title: isRu ? "Советы на ночь" : "Overnight iPad Tips") {
             VStack(alignment: .leading, spacing: 8) {
-                Text("• Keep the iPad plugged into its charger overnight—this app keeps the screen awake while open.")
-                Text("• If the room is still too bright, lower the iPad Control Center brightness slider and turn on Very Dim Mode above.")
-                Text("• Optional: Turn on Night Shift in iPad Settings → Display & Brightness for warmer evening colors.")
+                if isRu {
+                    Text("• Держите iPad подключённым к зарядке на ночь — приложение не даёт экрану заблокироваться.")
+                    Text("• Если в комнате всё ещё светло, уменьшите яркость в Пункте управления iPad и включите «Очень тусклый режим» выше.")
+                    Text("• По желанию включите Night Shift в Настройках iPad → Экран и яркость для более тёплых цветов.")
+                } else {
+                    Text("• Keep the iPad plugged into its charger overnight—this app keeps the screen awake while open.")
+                    Text("• If the room is still too bright, lower the iPad Control Center brightness slider and turn on Very Dim Mode above.")
+                    Text("• Optional: Turn on Night Shift in iPad Settings → Display & Brightness for warmer evening colors.")
+                }
             }
             .font(.caption)
             .foregroundColor(.secondary)
