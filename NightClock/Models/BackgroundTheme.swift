@@ -11,22 +11,22 @@ enum BackgroundCategory: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var displayName: String {
-        switch self {
-        case .blue:
-            return "Blue (5)"
-        case .darkBlue:
-            return "Dark Blue (5)"
-        case .red:
-            return "Red (2)"
-        case .gray:
-            return "Gray (3)"
-        case .black:
-            return "Black (5)"
-        case .green:
-            return "Green (3)"
-        case .custom:
-            return "Sleep & Warm Custom (7)"
+    func displayName(for language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.blue, .english): return "Blue (5)"
+        case (.blue, .russian): return "Синие (5)"
+        case (.darkBlue, .english): return "Dark Blue (5)"
+        case (.darkBlue, .russian): return "Тёмно-синие (5)"
+        case (.red, .english): return "Red (2)"
+        case (.red, .russian): return "Красные (2)"
+        case (.gray, .english): return "Gray (3)"
+        case (.gray, .russian): return "Серые (3)"
+        case (.black, .english): return "Black (5)"
+        case (.black, .russian): return "Чёрные (5)"
+        case (.green, .english): return "Green (3)"
+        case (.green, .russian): return "Зелёные (3)"
+        case (.custom, .english): return "Sleep & Warm Custom (7)"
+        case (.custom, .russian): return "Тёплые для сна (7)"
         }
     }
 }
@@ -97,85 +97,171 @@ enum BackgroundTheme: String, CaseIterable, Identifiable {
         }
     }
 
-    var displayName: String {
-        switch self {
-        case .blueHorizon: return "Blue Horizon"
-        case .ceruleanMist: return "Cerulean Mist"
-        case .sapphireRain: return "Sapphire Rain"
-        case .cobaltRipples: return "Cobalt Ripples"
-        case .glacierAurora: return "Glacier Aurora"
+    func displayName(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            switch self {
+            case .blueHorizon: return "Blue Horizon"
+            case .ceruleanMist: return "Cerulean Mist"
+            case .sapphireRain: return "Sapphire Rain"
+            case .cobaltRipples: return "Cobalt Ripples"
+            case .glacierAurora: return "Glacier Aurora"
 
-        case .midnightSwell: return "Midnight Swell"
-        case .abyssalStars: return "Abyssal Stars"
-        case .indigoNebula: return "Indigo Nebula"
-        case .harborBeacon: return "Harbor Glow"
-        case .nocturneDots: return "Nocturne Matrix"
+            case .midnightSwell: return "Midnight Swell"
+            case .abyssalStars: return "Abyssal Stars"
+            case .indigoNebula: return "Indigo Nebula"
+            case .harborBeacon: return "Harbor Glow"
+            case .nocturneDots: return "Nocturne Matrix"
 
-        case .crimsonEmbers: return "Crimson Embers"
-        case .rubyBreath: return "Ruby Breath"
+            case .crimsonEmbers: return "Crimson Embers"
+            case .rubyBreath: return "Ruby Breath"
 
-        case .silverFog: return "Silver Fog"
-        case .pebbleRings: return "Pebble Rings"
-        case .graphiteDust: return "Graphite Dust"
+            case .silverFog: return "Silver Fog"
+            case .pebbleRings: return "Pebble Rings"
+            case .graphiteDust: return "Graphite Dust"
 
-        case .voidPulse: return "Pure Void Pulse"
-        case .obsidianStars: return "Obsidian Sky"
-        case .shadowPendulum: return "Shadow Arc"
-        case .coalFireflies: return "Coal Fireflies"
-        case .eclipseHalo: return "Eclipse Halo"
+            case .voidPulse: return "Pure Void Pulse"
+            case .obsidianStars: return "Obsidian Sky"
+            case .shadowPendulum: return "Shadow Arc"
+            case .coalFireflies: return "Coal Fireflies"
+            case .eclipseHalo: return "Eclipse Halo"
 
-        case .forestCanopy: return "Forest Canopy"
-        case .mossFireflies: return "Moss Fireflies"
-        case .pineAurora: return "Pine Aurora"
+            case .forestCanopy: return "Forest Canopy"
+            case .mossFireflies: return "Moss Fireflies"
+            case .pineAurora: return "Pine Aurora"
 
-        case .amberHearth: return "Warm Amber Hearth"
-        case .twilightPlum: return "Twilight Plum"
-        case .midnightTeal: return "Midnight Teal"
-        case .sepiaSand: return "Sepia Sand"
-        case .softRosewood: return "Soft Rosewood"
-        case .moonlitLavender: return "Moonlit Lavender"
-        case .bronzeHorizon: return "Bronze Horizon"
+            case .amberHearth: return "Warm Amber Hearth"
+            case .twilightPlum: return "Twilight Plum"
+            case .midnightTeal: return "Midnight Teal"
+            case .sepiaSand: return "Sepia Sand"
+            case .softRosewood: return "Soft Rosewood"
+            case .moonlitLavender: return "Moonlit Lavender"
+            case .bronzeHorizon: return "Bronze Horizon"
+            }
+
+        case .russian:
+            switch self {
+            case .blueHorizon: return "Синий горизонт"
+            case .ceruleanMist: return "Лазурный туман"
+            case .sapphireRain: return "Сапфировый дождь"
+            case .cobaltRipples: return "Кобальтовые круги"
+            case .glacierAurora: return "Ледяное сияние"
+
+            case .midnightSwell: return "Полуночная волна"
+            case .abyssalStars: return "Глубокие звёзды"
+            case .indigoNebula: return "Туманность индиго"
+            case .harborBeacon: return "Свет гавани"
+            case .nocturneDots: return "Ночная матрица"
+
+            case .crimsonEmbers: return "Алые искры"
+            case .rubyBreath: return "Рубиновое дыхание"
+
+            case .silverFog: return "Серебристый туман"
+            case .pebbleRings: return "Тихая рябь"
+            case .graphiteDust: return "Графитовая пыль"
+
+            case .voidPulse: return "Пульс пустоты"
+            case .obsidianStars: return "Обсидиановое небо"
+            case .shadowPendulum: return "Теневая дуга"
+            case .coalFireflies: return "Угольные светлячки"
+            case .eclipseHalo: return "Кольцо затмения"
+
+            case .forestCanopy: return "Лесной полог"
+            case .mossFireflies: return "Лесные светлячки"
+            case .pineAurora: return "Изумрудное сияние"
+
+            case .amberHearth: return "Тёплый очаг"
+            case .twilightPlum: return "Сумеречная слива"
+            case .midnightTeal: return "Ночная бирюза"
+            case .sepiaSand: return "Ночные дюны"
+            case .softRosewood: return "Пыльная роза"
+            case .moonlitLavender: return "Лунная лаванда"
+            case .bronzeHorizon: return "Бронзовый горизонт"
+            }
         }
     }
 
-    var subtitle: String {
-        switch self {
-        case .blueHorizon: return "Slow ocean-blue wave bands"
-        case .ceruleanMist: return "Soft breathing sky-blue clouds"
-        case .sapphireRain: return "Gentle drifting blue light drops"
-        case .cobaltRipples: return "Calm expanding blue rings"
-        case .glacierAurora: return "Soft vertical northern blue curtains"
+    func subtitle(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            switch self {
+            case .blueHorizon: return "Slow ocean-blue wave bands"
+            case .ceruleanMist: return "Soft breathing sky-blue clouds"
+            case .sapphireRain: return "Gentle drifting blue light drops"
+            case .cobaltRipples: return "Calm expanding blue rings"
+            case .glacierAurora: return "Soft vertical northern blue curtains"
 
-        case .midnightSwell: return "Deep navy rolling tide"
-        case .abyssalStars: return "Sparse slow-fading night stars"
-        case .indigoNebula: return "Drifting dark indigo cosmos"
-        case .harborBeacon: return "Slow deep-navy pendulum glow"
-        case .nocturneDots: return "Subtle breathing dot grid"
+            case .midnightSwell: return "Deep navy rolling tide"
+            case .abyssalStars: return "Sparse slow-fading night stars"
+            case .indigoNebula: return "Drifting dark indigo cosmos"
+            case .harborBeacon: return "Slow deep-navy pendulum glow"
+            case .nocturneDots: return "Subtle breathing dot grid"
 
-        case .crimsonEmbers: return "Rising low-light warm red embers"
-        case .rubyBreath: return "Ultra-calm dark red vignette"
+            case .crimsonEmbers: return "Rising low-light warm red embers"
+            case .rubyBreath: return "Ultra-calm dark red vignette"
 
-        case .silverFog: return "Drifting muted slate mist"
-        case .pebbleRings: return "Quiet gray water ripples"
-        case .graphiteDust: return "Slow floating neutral dust motes"
+            case .silverFog: return "Drifting muted slate mist"
+            case .pebbleRings: return "Quiet gray water ripples"
+            case .graphiteDust: return "Slow floating neutral dust motes"
 
-        case .voidPulse: return "Near-black 20-second soft pulse"
-        case .obsidianStars: return "Pitch-black with faint pinprick stars"
-        case .shadowPendulum: return "Pitch-black with drifting charcoal arc"
-        case .coalFireflies: return "Black floor with tiny warm specs"
-        case .eclipseHalo: return "Dark rotating eclipse ring"
+            case .voidPulse: return "Near-black 20-second soft pulse"
+            case .obsidianStars: return "Pitch-black with faint pinprick stars"
+            case .shadowPendulum: return "Pitch-black with drifting charcoal arc"
+            case .coalFireflies: return "Black floor with tiny warm specs"
+            case .eclipseHalo: return "Dark rotating eclipse ring"
 
-        case .forestCanopy: return "Muted sage breathing light"
-        case .mossFireflies: return "Deep pine with gentle fireflies"
-        case .pineAurora: return "Slow emerald night ribbons"
+            case .forestCanopy: return "Muted sage breathing light"
+            case .mossFireflies: return "Deep pine with gentle fireflies"
+            case .pineAurora: return "Slow emerald night ribbons"
 
-        case .amberHearth: return "Blue-light-free warm ember glow"
-        case .twilightPlum: return "Muted dusty-violet drifting clouds"
-        case .midnightTeal: return "Deep sea-glass night wave"
-        case .sepiaSand: return "Soft shifting warm-brown dunes"
-        case .softRosewood: return "Gentle dark dusty-rose breath"
-        case .moonlitLavender: return "Soft slate-lavender mist drift"
-        case .bronzeHorizon: return "Faint warm-gold shimmer on black"
+            case .amberHearth: return "Blue-light-free warm ember glow"
+            case .twilightPlum: return "Muted dusty-violet drifting clouds"
+            case .midnightTeal: return "Deep sea-glass night wave"
+            case .sepiaSand: return "Soft shifting warm-brown dunes"
+            case .softRosewood: return "Gentle dark dusty-rose breath"
+            case .moonlitLavender: return "Soft slate-lavender mist drift"
+            case .bronzeHorizon: return "Faint warm-gold shimmer on black"
+            }
+
+        case .russian:
+            switch self {
+            case .blueHorizon: return "Плавные синие морские волны"
+            case .ceruleanMist: return "Мягкие плывущие облака"
+            case .sapphireRain: return "Медленные падающие капли света"
+            case .cobaltRipples: return "Спокойные расходящиеся круги"
+            case .glacierAurora: return "Мягкое северное сияние"
+
+            case .midnightSwell: return "Глубокий тёмно-синий прилив"
+            case .abyssalStars: return "Редкие мерцающие звёзды"
+            case .indigoNebula: return "Плывущий космос оттенка индиго"
+            case .harborBeacon: return "Медленный маятник мягкого света"
+            case .nocturneDots: return "Незаметно дышащая сетка точек"
+
+            case .crimsonEmbers: return "Тёплые красные искорки вверх"
+            case .rubyBreath: return "Очень спокойное бордовое свечение"
+
+            case .silverFog: return "Плывущая серая дымка"
+            case .pebbleRings: return "Тихие круги по тёмной воде"
+            case .graphiteDust: return "Медленные нейтральные пылинки"
+
+            case .voidPulse: return "Почти чёрный 20-секундный пульс"
+            case .obsidianStars: return "Чёрное небо и слабые звёздочки"
+            case .shadowPendulum: return "Чёрный фон с мягкой тенью"
+            case .coalFireflies: return "Чёрный фон и тёплые огоньки"
+            case .eclipseHalo: return "Тёмное вращающееся кольцо"
+
+            case .forestCanopy: return "Мягкий приглушённый лесной свет"
+            case .mossFireflies: return "Тёмная хвоя и тихие светлячки"
+            case .pineAurora: return "Плавные изумрудные ленты"
+
+            case .amberHearth: return "Без синего света — тёплый уют"
+            case .twilightPlum: return "Пыльно-фиолетовые облака"
+            case .midnightTeal: return "Глубокая волна морского стекла"
+            case .sepiaSand: return "Плавные тёпло-коричневые дюны"
+            case .softRosewood: return "Мягкое дыхание тёмной розы"
+            case .moonlitLavender: return "Спокойная лавандовая дымка"
+            case .bronzeHorizon: return "Лёгкий золотистый отблеск"
+            }
         }
     }
 
