@@ -1,5 +1,21 @@
 import SwiftUI
 
+enum AppLanguage: String, CaseIterable, Identifiable {
+    case english
+    case russian
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .english:
+            return "English"
+        case .russian:
+            return "Русский"
+        }
+    }
+}
+
 enum ClockFontOption: String, CaseIterable, Identifiable {
     case rounded
     case sans
@@ -9,33 +25,33 @@ enum ClockFontOption: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var displayName: String {
-        switch self {
-        case .rounded:
-            return "Soft Rounded"
-        case .sans:
-            return "Classic Clean"
-        case .monospaced:
-            return "Digital Mono"
-        case .serif:
-            return "Editorial Serif"
-        case .boldDisplay:
-            return "Bold Display"
+    func displayName(for language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.rounded, .english): return "Soft Rounded"
+        case (.rounded, .russian): return "Мягкий округлый"
+        case (.sans, .english): return "Classic Clean"
+        case (.sans, .russian): return "Классический ровный"
+        case (.monospaced, .english): return "Digital Mono"
+        case (.monospaced, .russian): return "Цифровой моно"
+        case (.serif, .english): return "Editorial Serif"
+        case (.serif, .russian): return "Книжный с засечками"
+        case (.boldDisplay, .english): return "Bold Display"
+        case (.boldDisplay, .russian): return "Крупный жирный"
         }
     }
 
-    var subtitle: String {
-        switch self {
-        case .rounded:
-            return "Gentle, smooth numerals"
-        case .sans:
-            return "Crisp modern sans-serif"
-        case .monospaced:
-            return "Fixed-width digital feel"
-        case .serif:
-            return "Classic warm typography"
-        case .boldDisplay:
-            return "Extra thick for easy distance reading"
+    func subtitle(for language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.rounded, .english): return "Gentle, smooth numerals"
+        case (.rounded, .russian): return "Плавные и мягкие цифры"
+        case (.sans, .english): return "Crisp modern sans-serif"
+        case (.sans, .russian): return "Чёткий современный шрифт"
+        case (.monospaced, .english): return "Fixed-width digital feel"
+        case (.monospaced, .russian): return "Ровная ширина всех цифр"
+        case (.serif, .english): return "Classic warm typography"
+        case (.serif, .russian): return "Классический тёплый стиль"
+        case (.boldDisplay, .english): return "Extra thick for easy distance reading"
+        case (.boldDisplay, .russian): return "Утолщённый — легко читать издалека"
         }
     }
 
@@ -65,20 +81,20 @@ enum ClockColorOption: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var displayName: String {
-        switch self {
-        case .warmCream:
-            return "Warm Cream"
-        case .softWhite:
-            return "Soft White"
-        case .nightRed:
-            return "Night Red"
-        case .warmAmber:
-            return "Warm Amber"
-        case .paleBlue:
-            return "Pale Blue"
-        case .sageGreen:
-            return "Soft Sage"
+    func displayName(for language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.warmCream, .english): return "Warm Cream"
+        case (.warmCream, .russian): return "Тёплый кремовый"
+        case (.softWhite, .english): return "Soft White"
+        case (.softWhite, .russian): return "Мягкий белый"
+        case (.nightRed, .english): return "Night Red"
+        case (.nightRed, .russian): return "Ночной красный"
+        case (.warmAmber, .english): return "Warm Amber"
+        case (.warmAmber, .russian): return "Тёплый янтарь"
+        case (.paleBlue, .english): return "Pale Blue"
+        case (.paleBlue, .russian): return "Нежно-голубой"
+        case (.sageGreen, .english): return "Soft Sage"
+        case (.sageGreen, .russian): return "Мягкий шалфей"
         }
     }
 
@@ -101,6 +117,7 @@ enum ClockColorOption: String, CaseIterable, Identifiable {
 }
 
 final class ClockSettings: ObservableObject {
+    @AppStorage("appLanguage") var appLanguageID: String = AppLanguage.english.rawValue
     @AppStorage("selectedBackgroundID") var selectedBackgroundID: String = BackgroundTheme.abyssalStars.rawValue
     @AppStorage("selectedFontID") var selectedFontID: String = ClockFontOption.rounded.rawValue
     @AppStorage("selectedClockColorID") var selectedClockColorID: String = ClockColorOption.warmCream.rawValue
@@ -112,6 +129,11 @@ final class ClockSettings: ObservableObject {
     @AppStorage("backgroundBrightness") var backgroundBrightness: Double = 0.65
     @AppStorage("pixelShiftEnabled") var pixelShiftEnabled: Bool = true
     @AppStorage("clockScale") var clockScale: Double = 1.0
+
+    var selectedLanguage: AppLanguage {
+        get { AppLanguage(rawValue: appLanguageID) ?? .english }
+        set { appLanguageID = newValue.rawValue }
+    }
 
     var selectedBackground: BackgroundTheme {
         get { BackgroundTheme(rawValue: selectedBackgroundID) ?? .abyssalStars }
