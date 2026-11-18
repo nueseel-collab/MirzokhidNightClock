@@ -72,7 +72,16 @@ struct ClockDisplayView: View {
 
     private func formattedDate(from date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d"
-        return formatter.string(from: date)
+        switch settings.selectedLanguage {
+        case .english:
+            formatter.locale = Locale(identifier: "en_US")
+            formatter.dateFormat = "EEEE, MMM d"
+            return formatter.string(from: date)
+        case .russian:
+            formatter.locale = Locale(identifier: "ru_RU")
+            formatter.dateFormat = "EEEE, d MMMM"
+            let text = formatter.string(from: date)
+            return text.prefix(1).uppercased() + text.dropFirst()
+        }
     }
 }
