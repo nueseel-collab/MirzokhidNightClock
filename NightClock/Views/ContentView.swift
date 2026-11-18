@@ -6,6 +6,10 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var hideWorkItem: DispatchWorkItem?
 
+    private var isRu: Bool {
+        settings.selectedLanguage == .russian
+    }
+
     var body: some View {
         ZStack {
             Color.black
@@ -33,7 +37,7 @@ struct ContentView: View {
                     Spacer()
                     controlsBar
                         .padding(.bottom, 26)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 16)
                 }
                 .transition(.opacity)
             }
@@ -56,16 +60,21 @@ struct ContentView: View {
     }
 
     private var controlsBar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             Button {
                 withAnimation(.easeInOut(duration: 0.4)) {
                     settings.veryDimMode.toggle()
                 }
                 scheduleControlsHide()
             } label: {
-                Label(settings.veryDimMode ? "Very Dim: On" : "Very Dim", systemImage: settings.veryDimMode ? "moon.fill" : "moon")
+                let dimTitle = isRu
+                    ? (settings.veryDimMode ? "Тускл. вкл" : "Тускло")
+                    : (settings.veryDimMode ? "Dim On" : "Very Dim")
+                Label(dimTitle, systemImage: settings.veryDimMode ? "moon.fill" : "moon")
                     .font(.subheadline.weight(.medium))
-                    .padding(.horizontal, 14)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .background(
                         Capsule()
@@ -77,9 +86,13 @@ struct ContentView: View {
                 settings.use24HourTime.toggle()
                 scheduleControlsHide()
             } label: {
-                Text(settings.use24HourTime ? "24h" : "12h")
+                let formatTitle = isRu
+                    ? (settings.use24HourTime ? "24ч" : "12ч")
+                    : (settings.use24HourTime ? "24h" : "12h")
+                Text(formatTitle)
                     .font(.subheadline.weight(.medium))
-                    .padding(.horizontal, 14)
+                    .lineLimit(1)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .background(
                         Capsule()
@@ -91,9 +104,11 @@ struct ContentView: View {
                 hideWorkItem?.cancel()
                 showSettings = true
             } label: {
-                Label("Customize", systemImage: "slider.horizontal.3")
+                Label(isRu ? "Настроить" : "Customize", systemImage: "slider.horizontal.3")
                     .font(.subheadline.weight(.medium))
-                    .padding(.horizontal, 14)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .background(
                         Capsule()
@@ -102,7 +117,7 @@ struct ContentView: View {
             }
         }
         .foregroundColor(Color.white.opacity(settings.veryDimMode ? 0.55 : 0.85))
-        .padding(8)
+        .padding(6)
         .background(
             Capsule()
                 .fill(Color.black.opacity(0.55))
